@@ -1,11 +1,10 @@
 <p align="center">
 	<h1 align="center">
-    <span>✅ Loadsmart</span>
+    <p align="center">
+    <img src="https://user-images.githubusercontent.com/17098382/118923140-7ac14080-b911-11eb-9a9c-2709ad0a3a0d.png" width="fit-content" alt="Logo">
+</p>
   </h1>
   <p align="center">Data Challenge</p>
-</p>
-<p align="center">
-    <img src="packages/web/src/assets/gif/preview.gif" width="fit-content" alt="Logo">
 </p>
 
 # [DEMO!!!](https://trello-clone-liv-saude.herokuapp.com)
