@@ -13,11 +13,12 @@
 
 This database is hosted by: https://api.elephantsql.com/, a free host using a free database PostgreSQL. Follow in below the configs.
 
-```javascript
-host = "kashin.db.elephantsql.com";
-database = "okqvfizk";
-user = "okqvfizk";
-password = "pbaudbEor8zO8UFJ-rfMbdivEzZmUOWb";
+```python
+host = "kashin.db.elephantsql.com"
+database = "okqvfizk"
+user = "okqvfizk"
+password = "pbaudbEor8zO8UFJ-rfMbdivEzZmUOWb"
+port = 5432
 ```
 
 ## Creating tables on database:
@@ -155,4 +156,13 @@ CREATE TABLE public.sourcing_channel (
 	CONSTRAINT sourcing_channel_pk PRIMARY KEY (id),
 	CONSTRAINT sourcing_channel_un2 UNIQUE (name)
 );
+```
+
+## Python Config
+
+```bash
+sudo apt install python3-pip
+sudo apt-get install -y postgis postgresql-9.3-postgis-2.1
+sudo apt-get install libpq-dev python-dev
+pip install psycopg2
 ```
