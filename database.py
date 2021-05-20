@@ -3,8 +3,11 @@
 import psycopg2
 from config import config
 
+import sys
+sys.path.append('../')
 
-def connect(sql):
+
+def connect(sqls):
     """ Connect to the PostgreSQL database server """
     conn = None
     try:
@@ -19,17 +22,18 @@ def connect(sql):
         cur = conn.cursor()
 
         # execute a statement
-        print('PostgreSQL database version:')
-        cur.execute(sql)
+        for sql in sqls:
+            print('Executing...', sql)
+            cur.execute(sql)
 
-        # display the PostgreSQL database server version
-        db_version = cur.fetchone()
-        print(db_version)
+        conn.commit()
+        count = cur.rowcount
+        print(count, "Record inserted successfully in table.")
 
         # close the communication with the PostgreSQL
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+        print('Failed to insert record into table.', error)
     finally:
         if conn is not None:
             conn.close()
@@ -38,3 +42,7 @@ def connect(sql):
 
 if __name__ == '__main__':
     connect()
+
+
+def myfunc():
+    print('hello')

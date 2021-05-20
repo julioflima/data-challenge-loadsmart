@@ -1,5 +1,5 @@
 #!/usr/bin/env python
 
-import database
+from create_shipper import createShipper
 
-database.connect('select * from address a ')
+createShipper()

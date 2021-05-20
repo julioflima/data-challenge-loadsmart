@@ -9,6 +9,51 @@
 
 # [DEMO!!!](https://trello-clone-liv-saude.herokuapp.com)
 
+## Files
+
+### Database Connection
+
+These files in below are respective to database connection:
+
+- database.py
+- database.ini
+- config.py
+
+### Dataset
+
+Dataset provided by Loadsmart in format Comma-Separeted Values.
+
+- data.csv
+
+### Document Challenge
+
+Document with specs of this challenge.
+
+- challenge.pdf
+
+### Git Ignore
+
+This file is respective to ignore some files generated in local, e.g. for cache.
+
+- .gitignore
+
+### ETL Files
+
+This files in below threat the data and add to database.
+
+- create_address.py
+- create_carrier.py
+- create_deliver.py
+- create_equipament.py
+- create_shipper.py
+- create_sourcing_channel.py
+
+### Main
+
+This is the main file of this ETL.
+
+- main.py
+
 ## Connection to Database:
 
 This database is hosted by: https://api.elephantsql.com/, a free host using a free database PostgreSQL. Follow in below the configs.
@@ -165,4 +210,10 @@ sudo apt install python3-pip
 sudo apt-get install -y postgis postgresql-9.3-postgis-2.1
 sudo apt-get install libpq-dev python-dev
 pip install psycopg2
+```
+
+## Python running
+
+```bash
+python main.py
 ```
