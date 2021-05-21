@@ -7,8 +7,6 @@
   <p align="center">Data Challenge</p>
 </p>
 
-# [DEMO!!!](https://trello-clone-liv-saude.herokuapp.com)
-
 ## Files
 
 ### Database Connection
