@@ -14,6 +14,7 @@ def createSourcingChannel():
     sourcingChannels = df.as_matrix()
 
     sqls = np.array([])
+    variable = ''
 
     for sourcingChannelArray in sourcingChannels:
         sourcingChannel = sourcingChannelArray[0]
