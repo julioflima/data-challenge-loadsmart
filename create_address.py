@@ -15,9 +15,9 @@ def createAddress():
     sqls = np.array([])
 
     for addressesPairArray in addresses:
-        sourcingChannelPair = addressesPairArray[0].split(' -> ')
+        addressesPair = addressesPairArray[0].split(' -> ')
 
-        for cityState in sourcingChannelPair:
+        for cityState in addressesPair:
             pair = cityState.split(',')
             sql = ''.join([
                 'INSERT INTO public.address (city,state) VALUES (', "'", pair[0], "'", ",", "'", pair[1], "'", ');'])

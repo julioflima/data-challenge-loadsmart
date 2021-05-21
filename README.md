@@ -129,7 +129,7 @@ CREATE TABLE public.deliver (
 	source_date timestamptz NULL,
 	pickup_date timestamptz NULL,
 	delivery_date timestamptz NULL,
-	book_price numeric NULL,
+	book_price float4 NULL,
 	source_price float4 NULL,
 	pnl float4 NULL,
 	mileage float4 NULL,
