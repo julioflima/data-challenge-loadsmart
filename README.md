@@ -82,7 +82,8 @@ CREATE TABLE public.address (
 	city varchar NOT NULL,
 	state varchar(2) NOT NULL,
 	CONSTRAINT address_pk PRIMARY KEY (id),
-	CONSTRAINT address_un UNIQUE (state)
+	CONSTRAINT address_un UNIQUE (id),
+	CONSTRAINT address_un2 UNIQUE (city, state)
 );
 
 ```

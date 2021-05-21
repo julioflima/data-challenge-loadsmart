@@ -1,27 +1,31 @@
 #!/usr/bin/env python
-
-from database import connect
-
 import pandas as pd
 import numpy as np
 
+from database import Database
+db = Database()
+
 
 def createAddress():
-    df = pd.read_csv('data.csv', usecols=['sourcing_channel'])
+    df = pd.read_csv('data.csv', usecols=['lane'])
     df.dropna(inplace=True)
 
-    sourcingChannels = df.as_matrix()
+    addresses = df.as_matrix()
 
     sqls = np.array([])
 
-    for sourcingChannelArray in sourcingChannels:
-        sourcingChannel = sourcingChannelArray[0]
-        sql = ''.join([
-            'INSERT INTO public.sourcing_channel (channel) VALUES (', "'", sourcingChannel, "'", ');'])
-        sqls = np.append(sqls, [sql])
+    for addressesPairArray in addresses:
+        sourcingChannelPair = addressesPairArray[0].split(' -> ')
+
+        for cityState in sourcingChannelPair:
+            pair = cityState.split(',')
+            sql = ''.join([
+                'INSERT INTO public.address (city,state) VALUES (', "'", pair[0], "'", ",", "'", pair[1], "'", ');'])
+            print(sql)
+            sqls = np.append(sqls, [sql])
+
         sqls = list(dict.fromkeys(sqls))
 
-    print(sqls)
-    connect(sqls)
+    db.insert(sqls)
 
-    print('Sourcing Channels created.')
+    print('Addresses created.')

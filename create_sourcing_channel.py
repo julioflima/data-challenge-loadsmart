@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-
-from database import connect
-
 import pandas as pd
 import numpy as np
+
+from database import Database
+db = Database()
 
 
 def createSourcingChannel():
@@ -20,7 +20,6 @@ def createSourcingChannel():
         sqls = np.append(sqls, [sql])
         sqls = list(dict.fromkeys(sqls))
 
-    print(sqls)
-    connect(sqls)
+    db.insert(sqls)
 
     print('Sourcing Channels created.')
