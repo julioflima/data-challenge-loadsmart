@@ -8,9 +8,7 @@ import numpy as np
 
 def createSourcingChannel():
     df = pd.read_csv('data.csv', usecols=['sourcing_channel'])
-
     df.dropna(inplace=True)
-
     sourcingChannels = df.as_matrix()
 
     sqls = np.array([])

@@ -8,7 +8,6 @@ import numpy as np
 
 def createEquipment():
     df = pd.read_csv('data.csv', usecols=['equipment_type'])
-
     equipmentsTypes = df.as_matrix()
 
     sqls = np.array([])

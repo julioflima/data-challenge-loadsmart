@@ -6,15 +6,13 @@ import pandas as pd
 import numpy as np
 
 
-def createSourcingChannel():
+def createAddress():
     df = pd.read_csv('data.csv', usecols=['sourcing_channel'])
-
     df.dropna(inplace=True)
 
     sourcingChannels = df.as_matrix()
 
     sqls = np.array([])
-    variable = ''
 
     for sourcingChannelArray in sourcingChannels:
         sourcingChannel = sourcingChannelArray[0]

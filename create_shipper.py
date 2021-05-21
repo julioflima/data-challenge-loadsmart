@@ -8,7 +8,6 @@ import numpy as np
 
 def createShipper():
     df = pd.read_csv('data.csv', usecols=['shipper_name'])
-
     shippersIds = df.as_matrix()
 
     print()
