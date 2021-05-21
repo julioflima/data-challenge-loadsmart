@@ -47,12 +47,12 @@ def createCarrier():
             def sourcingChannelIsNan(channelId):
                 if channelId == channelId:
                     sqlChannelId = ''.join([
-                        'SELECT sc.id from sourcing_channel sc where sc.channel = ', "'", carriesArray[2], "'", ';'])
+                        'SELECT eq.id from equipment eq where eq.type = ', "'", carriesArray[0], "'", ';'])
 
                     cur.execute(sqlChannelId)
 
-                    return ''.join(["'", cur.fetchone()[0], "'"])
-                return 'null'
+                    return cur.fetchone()[0]
+                return ''
 
             channelId = sourcingChannelIsNan(carriesArray[2])
         # ----------------------------------------------------------
@@ -64,17 +64,19 @@ def createCarrier():
         # ----------------------------------------------------------
 
             sql = ''.join([
-                'INSERT INTO public.carrier (source_id,equipment_id,carrier_rating,sourcing_channel_id,vip_carrier,carrier_dropped_us_count) VALUES (',
-                "", sourceId, "", ",",
-                "'", equipmentId, "'", ",",
-                "", carrierRating, "", ",",
-                "", channelId, "", ",",
-                "'", vipCarrier, "'::boolean", ",",
+                'INSERT INTO public.sourcing_channel (source_id,equipment_id,carrier_rating,sourcing_channel_id,vip_carrier,carrier_dropped_us_count) VALUES (',
+                "", sourceId, "",
+                "'", equipmentId, "'",
+                "", carrierRating, "",
+                "'", channelId, "'",
+                "'", vipCarrier, "'::boolean",
                 "", carrierDroppedUsCount, "",
                 ');'])
 
             sqls = np.append(sqls, [sql])
             sqls = list(dict.fromkeys(sqls))
+
+        print(sqls)
 
         for sql in sqls:
             cur.execute(sql)
