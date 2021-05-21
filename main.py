@@ -8,9 +8,9 @@ from create_carrier import createCarrier
 from create_deliver import createDeliver
 
 
-# createShipper()
-# createEquipment()
-# createSourcingChannel()
-# createAddress()
-# createCarrier()
+createShipper()
+createEquipment()
+createSourcingChannel()
+createAddress()
+createCarrier()
 createDeliver()

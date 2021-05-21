@@ -46,7 +46,7 @@ def createDeliver():
 
         sqls = np.array([])
 
-        deliveries = deliveries[0:10]
+        deliveries = deliveries[1:2]
 
         for deliveriesArray in deliveries:
             loadsmartId = str(deliveriesArray[0])
@@ -63,6 +63,7 @@ def createDeliver():
             cur.execute(sqlFromId)
 
             fromId = cur.fetchone()[0]
+
             # ----------------------------------------------------------
             cityTo = addressesPair[1].split(',')[0]
 
@@ -87,11 +88,14 @@ def createDeliver():
 
             carrierSourceId = deliveriesArray[11].split(' ')[1]
 
+            print(carrierSourceId)
+
             sqlCarrierId = ''.join([
                 'SELECT ca.id from carrier ca where ca.source_id = ', "", carrierSourceId, "", ';'])
 
             cur.execute(sqlCarrierId)
             carrierId = cur.fetchone()[0]
+            print(carrierId)
             # ----------------------------------------------------------
 
             shipperSourceId = deliveriesArray[12].split(' ')[1]
@@ -103,23 +107,21 @@ def createDeliver():
             shipperId = cur.fetchone()[0]
             # ----------------------------------------------------------
 
-            carrierOnTimeToPickup = deliveriesArray[13]
-            carrierOnTimeToDelivery = deliveriesArray[14]
-            carrierOnTimeOverall = deliveriesArray[15]
+            carrierOnTimeToPickup = str(deliveriesArray[13])
+            carrierOnTimeToDelivery = str(deliveriesArray[14])
+            carrierOnTimeOverall = str(deliveriesArray[15])
             pickupAppointmentTime = deliveriesArray[16]
             deliveryAppointmentTime = deliveriesArray[17]
-            hasMobileAppTracking = deliveriesArray[18]
-            hasMacropointTracking = deliveriesArray[19]
-            hasEdiTracking = deliveriesArray[20]
-            contractedLoad = deliveriesArray[21]
-            loadBookedAutonomously = deliveriesArray[22]
-            loadSourcedAutonomously = deliveriesArray[23]
-            loadWasCancelled = deliveriesArray[24]
+            hasMobileAppTracking = str(deliveriesArray[18])
+            hasMacropointTracking = str(deliveriesArray[19])
+            hasEdiTracking = str(deliveriesArray[20])
+            contractedLoad = str(deliveriesArray[21])
+            loadBookedAutonomously = str(deliveriesArray[22])
+            loadSourcedAutonomously = str(deliveriesArray[23])
+            loadWasCancelled = str(deliveriesArray[24])
 
-            print(carrierOnTimeToPickup)
-# ,carrier_on_time_to_pickup,carrier_on_time_to_delivery,carrier_on_time_overall,pickup_appointment_time,delivery_appointment_time,has_mobile_app_tracking,has_macropoint_tracking,has_edi_tracking,contracted_load,load_booked_autonomously,load_sourced_autonomously,load_was_cancelled
             sql = ''.join([
-                'INSERT INTO public.deliver (loadsmart_id,from_id,to_id,quote_date,book_date,source_date,pickup_date,delivery_date,book_price,source_price,pnl,mileage,carrier_id,shipper_id,carrier_on_time_to_pickup) VALUES (',
+                'INSERT INTO public.deliver (loadsmart_id,from_id,to_id,quote_date,book_date,source_date,pickup_date,delivery_date,book_price,source_price,pnl,mileage,carrier_id,shipper_id,carrier_on_time_to_pickup,carrier_on_time_to_delivery,carrier_on_time_overall,pickup_appointment_time,delivery_appointment_time,has_mobile_app_tracking,has_macropoint_tracking,has_edi_tracking,contracted_load,load_booked_autonomously,load_sourced_autonomously,load_was_cancelled) VALUES (',
                 "'", loadsmartId, "'", ",",
                 "'", fromId, "'", ",",
                 "'", toId, "'", ",",
@@ -134,18 +136,18 @@ def createDeliver():
                 "'", mileage, "'", ",",
                 "'", carrierId, "'", ",",
                 "'", shipperId, "'", ",",
-                "'", carrierOnTimeToPickup, "'",
-                # "'", carrierOnTimeToDelivery, "'::boolean",
-                # "'", carrierOnTimeOverall, "'::boolean",
-                # "'", pickupAppointmentTime, "'::timestamtz",
-                # "'", deliveryAppointmentTime, "'::timestamtz",
-                # "'", hasMobileAppTracking, "'::boolean",
-                # "'", hasMacropointTracking, "'::boolean",
-                # "'", hasEdiTracking, "'::boolean",
-                # "'", contractedLoad, "'::boolean",
-                # "'", loadBookedAutonomously, "'::boolean",
-                # "'", loadSourcedAutonomously, "'::boolean",
-                # "'", loadWasCancelled, "'::boolean",
+                "'", carrierOnTimeToPickup, "'::boolean", ",",
+                "'", carrierOnTimeToDelivery, "'::boolean", ",",
+                "'", carrierOnTimeOverall, "'::boolean", ",",
+                "'", pickupAppointmentTime, "'::date", ",",
+                "'", deliveryAppointmentTime, "'::date", ",",
+                "'", hasMobileAppTracking, "'::boolean", ",",
+                "'", hasMacropointTracking, "'::boolean", ",",
+                "'", hasEdiTracking, "'::boolean", ",",
+                "'", contractedLoad, "'::boolean", ",",
+                "'", loadBookedAutonomously, "'::boolean", ",",
+                "'", loadSourcedAutonomously, "'::boolean", ",",
+                "'", loadWasCancelled, "'::boolean"
                 ');'])
 
             print(sql)
