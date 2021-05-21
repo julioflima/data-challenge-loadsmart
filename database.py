@@ -5,7 +5,7 @@ from config import config
 
 
 class Database:
-    def insert(sqls):
+    def insert(self, sqls):
         """ Connect to the PostgreSQL database server """
         conn = None
         try:
@@ -25,8 +25,7 @@ class Database:
                 cur.execute(sql)
 
             conn.commit()
-            count = cur.rowcount
-            print(count, "Record inserted successfully in table.")
+            print("Record inserted successfully in table.")
 
             # close the communication with the PostgreSQL
             cur.close()
@@ -37,7 +36,7 @@ class Database:
                 conn.close()
                 print('Database connection closed.')
 
-    def select(self):
+    def select(self, sql):
         """ Connect to the PostgreSQL database server """
         conn = None
         try:
@@ -53,17 +52,19 @@ class Database:
 
         # execute a statement
             print('PostgreSQL database version:')
-            cur.execute('SELECT version()')
+            cur.execute(sql)
 
-            # display the PostgreSQL database server version
-            db_version = cur.fetchone()
-            print(db_version)
+        # display the PostgreSQL result.
+            result = cur.fetchone()
+            print(result)
 
         # close the communication with the PostgreSQL
             cur.close()
+
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
                 print('Database connection closed.')
+                return result
