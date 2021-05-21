@@ -15,62 +15,81 @@ def createCarrier():
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
 
-        df = pd.read_csv('data.csv', usecols=['equipment_type',	'carrier_rating',
-                                              'sourcing_channel',	'vip_carrier',	'carrier_dropped_us_count', 'carrier_name'])
-        df.dropna(subset=['carrier_name'], inplace=True)
-        carriers = df.as_matrix()
+        df = pd.read_csv('data.csv', usecols=[
+            'loadsmart_id',
+            'lane',
+            'quote_date',
+            'book_date',
+            'source_date',
+            'pickup_date',
+            'delivery_date',
+            'book_price',
+            'source_price',
+            'pnl',
+            'mileage',
+            'carrier_name',
+            'shipper_name',
+            'carrier_on_time_to_pickup',
+            'carrier_on_time_to_delivery',
+            'carrier_on_time_overall',
+            'pickup_appointment_time',
+            'delivery_appointment_time',
+            'has_mobile_app_tracking',
+            'has_mobile_app_tracking',
+            'has_macropoint_tracking',
+            'has_edi_tracking',
+            'contracted_load',
+            'load_booked_autonomously',
+            'load_sourced_autonomously',
+            'load_was_cancelled'
+        ])
+        deliveries = df.as_matrix()
 
         sqls = np.array([])
 
-        for carriesArray in carriers:
-            cur = conn.cursor()
+        for deliveriesArray in deliveries:
+            loadsmartId = deliveriesArray[0]
+            # ----------------------------------------------------------
 
-            sourceId = carriesArray[5].split(' ')[1]
-        # ----------------------------------------------------------
+            fromId = deliveriesArray[1]
+            # ----------------------------------------------------------
 
-            sqlEquipmentId = ''.join([
-                'SELECT eq.id from equipment eq where eq.type = ', "'", carriesArray[0], "'", ';'])
+            toId = deliveriesArray[0]
+            # ----------------------------------------------------------
 
-            cur.execute(sqlEquipmentId)
+            quoteDate = deliveriesArray[0]
+            bookDate = deliveriesArray[0]
+            sourceDate = deliveriesArray[0]
+            pickupDate = deliveriesArray[0]
+            deliveryDate = deliveriesArray[0]
+            bookPrice = deliveriesArray[0]
+            sourcePrice = deliveriesArray[0]
+            pnl = deliveriesArray[0]
+            mileage = deliveriesArray[0]
+            # ----------------------------------------------------------
 
-            equipmentId = cur.fetchone()[0]
-        # ----------------------------------------------------------
+            carrierId = deliveriesArray[0]
+            # ----------------------------------------------------------
 
-            def carrierRatingIsNan(carrierRating):
-                if carrierRating == carrierRating:
-                    return str(carrierRating)
-                return '0.0'
+            shipperId = deliveriesArray[0]
+            # ----------------------------------------------------------
 
-            carrierRating = carrierRatingIsNan(carriesArray[1])
-        # ----------------------------------------------------------
-
-            def sourcingChannelIsNan(channelId):
-                if channelId == channelId:
-                    sqlChannelId = ''.join([
-                        'SELECT sc.id from sourcing_channel sc where sc.channel = ', "'", carriesArray[2], "'", ';'])
-
-                    cur.execute(sqlChannelId)
-
-                    return ''.join(["'", cur.fetchone()[0], "'"])
-                return 'null'
-
-            channelId = sourcingChannelIsNan(carriesArray[2])
-        # ----------------------------------------------------------
-
-            vipCarrier = str(carriesArray[3])
-        # ----------------------------------------------------------
-
-            carrierDroppedUsCount = str(carriesArray[4])
-        # ----------------------------------------------------------
+            carrierOnTimeToPickup = deliveriesArray[0]
+            carrierOnTimeToDelivery = deliveriesArray[0]
+            carrierOnTimeOverall = deliveriesArray[0]
+            pickupAppointmentTime = deliveriesArray[0]
+            deliveryAppointmentTime = deliveriesArray[0]
+            hasMobileAppTracking = deliveriesArray[0]
+            hasMacropointTracking = deliveriesArray[0]
+            hasEdiTracking = deliveriesArray[0]
+            contractedLoad = deliveriesArray[0]
+            loadBookedAutonomously = deliveriesArray[0]
+            loadSourcedAutonomously = deliveriesArray[0]
+            loadWasCancelled = deliveriesArray[0]
 
             sql = ''.join([
-                'INSERT INTO public.carrier (source_id,equipment_id,carrier_rating,sourcing_channel_id,vip_carrier,carrier_dropped_us_count) VALUES (',
+                'INSERT INTO public.deliver (loadsmart_id,from_id,to_id,quote_date,book_date,source_date,pickup_date,delivery_date,book_price,source_price,pnl,mileage,carrier_id,shipper_id,carrier_on_time_to_pickup,carrier_on_time_to_delivery,carrier_on_time_overall,pickup_appointment_time,delivery_appointment_time,has_mobile_app_tracking,has_macropoint_tracking,has_edi_tracking,contracted_load,load_booked_autonomously,load_sourced_autonomously,load_was_cancelled) VALUES (',
                 "", sourceId, "", ",",
-                "'", equipmentId, "'", ",",
-                "", carrierRating, "", ",",
-                "", channelId, "", ",",
-                "'", vipCarrier, "'::boolean", ",",
-                "", carrierDroppedUsCount, "",
                 ');'])
 
             sqls = np.append(sqls, [sql])
