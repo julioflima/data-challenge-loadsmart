@@ -44,7 +44,7 @@ This files in below threat the data and add to database.
 - create_address.py
 - create_carrier.py
 - create_deliver.py
-- create_equipament.py
+- create_equipment.py
 - create_shipper.py
 - create_sourcing_channel.py
 
@@ -96,7 +96,7 @@ CREATE TABLE public.address (
 
 CREATE TABLE public.carrier (
 	id uuid NOT NULL DEFAULT gen_random_uuid(),
-	source_id numeric NOT NULL,
+	channel numeric NOT NULL,
 	"name" varchar NULL,
 	equipment_id uuid NULL,
 	carrier_rating numeric NULL,
@@ -104,9 +104,9 @@ CREATE TABLE public.carrier (
 	vip_carrier bool NOT NULL DEFAULT false,
 	carrier_dropped_us_count numeric NOT NULL DEFAULT 0,
 	CONSTRAINT carrier_pk PRIMARY KEY (id),
-	CONSTRAINT carrier_un UNIQUE (source_id),
+	CONSTRAINT carrier_un UNIQUE (channel),
 	CONSTRAINT carrier_un2 UNIQUE (id),
-	CONSTRAINT carrier_fk FOREIGN KEY (equipment_id) REFERENCES equipament(id),
+	CONSTRAINT carrier_fk FOREIGN KEY (equipment_id) REFERENCES equipment(id),
 	CONSTRAINT carrier_fk_1 FOREIGN KEY (sourcing_channel_id) REFERENCES sourcing_channel(id)
 );
 ```
@@ -155,18 +155,18 @@ CREATE TABLE public.deliver (
 );
 ```
 
-### Table Equipament
+### Table Equipment
 
 ```sql
 -- Drop table
 
--- DROP TABLE public.equipament;
+-- DROP TABLE public.equipment;
 
-CREATE TABLE public.equipament (
+CREATE TABLE public.equipment (
 	id uuid NOT NULL DEFAULT gen_random_uuid(),
 	"type" varchar NOT NULL,
-	CONSTRAINT equipament_channel_pk PRIMARY KEY (id),
-	CONSTRAINT equipament_channel_un2 UNIQUE (type)
+	CONSTRAINT equipment_channel_pk PRIMARY KEY (id),
+	CONSTRAINT equipment_channel_un2 UNIQUE (type)
 );
 ```
 
@@ -179,11 +179,9 @@ CREATE TABLE public.equipament (
 
 CREATE TABLE public.shipper (
 	id uuid NOT NULL DEFAULT gen_random_uuid(),
-	source_id numeric NOT NULL,
 	"name" varchar NULL,
 	CONSTRAINT shipper_pk PRIMARY KEY (id),
-	CONSTRAINT shipper_un UNIQUE (source_id),
-	CONSTRAINT shipper_un2 UNIQUE (id)
+	CONSTRAINT shipper_un1 UNIQUE (id)
 );
 ```
 
@@ -196,10 +194,9 @@ CREATE TABLE public.shipper (
 
 CREATE TABLE public.sourcing_channel (
 	id uuid NOT NULL DEFAULT gen_random_uuid(),
-	source_id numeric NOT NULL,
-	"name" varchar NULL,
+	channel numeric NOT NULL,
 	CONSTRAINT sourcing_channel_pk PRIMARY KEY (id),
-	CONSTRAINT sourcing_channel_un2 UNIQUE (name)
+	CONSTRAINT sourcing_channel_un2 UNIQUE (channel)
 );
 ```
 

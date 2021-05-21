@@ -23,4 +23,4 @@ def createShipper():
 
     connect(sqls)
 
-    print('Shipper created.')
+    print('Shippers created.')
