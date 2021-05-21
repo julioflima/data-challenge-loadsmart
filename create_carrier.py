@@ -15,135 +15,62 @@ def createCarrier():
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
 
-        df = pd.read_csv('data.csv', usecols=[
-            'loadsmart_id',
-            'lane',
-            'quote_date',
-            'book_date',
-            'source_date',
-            'pickup_date',
-            'delivery_date',
-            'book_price',
-            'source_price',
-            'pnl',
-            'mileage',
-            'carrier_name',
-            'shipper_name',
-            'carrier_on_time_to_pickup',
-            'carrier_on_time_to_delivery',
-            'carrier_on_time_overall',
-            'pickup_appointment_time',
-            'delivery_appointment_time',
-            'has_mobile_app_tracking',
-            'has_macropoint_tracking',
-            'has_edi_tracking',
-            'contracted_load',
-            'load_booked_autonomously',
-            'load_sourced_autonomously',
-            'load_was_cancelled'
-        ])
-        deliveries = df.as_matrix()
+        df = pd.read_csv('data.csv', usecols=['equipment_type',	'carrier_rating',
+                                              'sourcing_channel',	'vip_carrier',	'carrier_dropped_us_count', 'carrier_name'])
+        df.dropna(subset=['carrier_name'], inplace=True)
+        carriers = df.as_matrix()
 
         sqls = np.array([])
 
-        deliveries = deliveries[0:10]
+        for carriesArray in carriers:
+            cur = conn.cursor()
 
-        for deliveriesArray in deliveries:
-            loadsmartId = deliveriesArray[0]
-            # ----------------------------------------------------------
+            sourceId = carriesArray[5].split(' ')[1]
+        # ----------------------------------------------------------
 
-            addressesPair = deliveriesArray[1].split(' -> ')
-            # ----------------------------------------------------------
+            sqlEquipmentId = ''.join([
+                'SELECT eq.id from equipment eq where eq.type = ', "'", carriesArray[0], "'", ';'])
 
-            cityFrom = addressesPair[0].split(',')[0]
+            cur.execute(sqlEquipmentId)
 
-            sqlFromId = ''.join([
-                'SELECT ad.id from address ad where ad.city = ', "'", cityFrom, "'", ';'])
+            equipmentId = cur.fetchone()[0]
+        # ----------------------------------------------------------
 
-            cur.execute(sqlFromId)
+            def carrierRatingIsNan(carrierRating):
+                if carrierRating == carrierRating:
+                    return str(carrierRating)
+                return '0.0'
 
-            fromId = cur.fetchone()[0]
-            # ----------------------------------------------------------
-            cityTo = addressesPair[1].split(',')[0]
+            carrierRating = carrierRatingIsNan(carriesArray[1])
+        # ----------------------------------------------------------
 
-            sqlToId = ''.join([
-                'SELECT ad.id from address ad where ad.city = ', "'", cityTo, "'", ';'])
+            def sourcingChannelIsNan(channelId):
+                if channelId == channelId:
+                    sqlChannelId = ''.join([
+                        'SELECT sc.id from sourcing_channel sc where sc.channel = ', "'", carriesArray[2], "'", ';'])
 
-            cur.execute(sqlToId)
+                    cur.execute(sqlChannelId)
 
-            toId = cur.fetchone()[0]
-            # ----------------------------------------------------------
+                    return ''.join(["'", cur.fetchone()[0], "'"])
+                return 'null'
 
-            quoteDate = deliveriesArray[2]
-            bookDate = deliveriesArray[3]
-            sourceDate = deliveriesArray[4]
-            pickupDate = deliveriesArray[5]
-            deliveryDate = deliveriesArray[6]
-            bookPrice = deliveriesArray[7]
-            sourcePrice = deliveriesArray[8]
-            pnl = deliveriesArray[9]
-            mileage = deliveriesArray[10]
-            # ----------------------------------------------------------
+            channelId = sourcingChannelIsNan(carriesArray[2])
+        # ----------------------------------------------------------
 
-            carrierSourceId = deliveriesArray[11].split(' ')[1]
+            vipCarrier = str(carriesArray[3])
+        # ----------------------------------------------------------
 
-            sqlCarrierId = ''.join([
-                'SELECT ca.id from carrier ca where ca.source_id = ', "", carrierSourceId, "", ';'])
-
-            cur.execute(sqlCarrierId)
-            carrierId = cur.fetchone()[0]
-            # ----------------------------------------------------------
-
-            shipperSourceId = deliveriesArray[12].split(' ')[1]
-
-            sqlShipperId = ''.join([
-                'SELECT sp.id from shipper sp where sp.source_id = ', "", shipperSourceId, "", ';'])
-
-            cur.execute(sqlShipperId)
-            shipperId = cur.fetchone()[0]
-            # ----------------------------------------------------------
-
-            carrierOnTimeToPickup = deliveriesArray[13]
-            carrierOnTimeToDelivery = deliveriesArray[14]
-            carrierOnTimeOverall = deliveriesArray[15]
-            pickupAppointmentTime = deliveriesArray[16]
-            deliveryAppointmentTime = deliveriesArray[17]
-            hasMobileAppTracking = deliveriesArray[18]
-            hasMacropointTracking = deliveriesArray[19]
-            hasEdiTracking = deliveriesArray[20]
-            contractedLoad = deliveriesArray[21]
-            loadBookedAutonomously = deliveriesArray[22]
-            loadSourcedAutonomously = deliveriesArray[23]
-            loadWasCancelled = deliveriesArray[24]
+            carrierDroppedUsCount = str(carriesArray[4])
+        # ----------------------------------------------------------
 
             sql = ''.join([
-                'INSERT INTO public.deliver (loadsmart_id,from_id,to_id,quote_date,book_date,source_date,pickup_date,delivery_date,book_price,source_price,pnl,mileage,carrier_id,shipper_id,carrier_on_time_to_pickup,carrier_on_time_to_delivery,carrier_on_time_overall,pickup_appointment_time,delivery_appointment_time,has_mobile_app_tracking,has_macropoint_tracking,has_edi_tracking,contracted_load,load_booked_autonomously,load_sourced_autonomously,load_was_cancelled) VALUES (',
-                "", loadsmartId, "", ",",
-                "", fromId, "", ",",
-                "", toId, "", ",",
-                "", quoteDate, "", ",",
-                "", bookDate, "", ",",
-                "", sourceDate, "", ",",
-                "", pickupDate, "", ",",
-                "", deliveryDate, "", ",",
-                "", bookPrice, "", ",",
-                "", sourcePrice, "", ",",
-                "", pnl, "", ",",
-                "", mileage, "", ",",
-                "", carrierId, "", ",",
-                "", shipperId, "", ",",
-                "'", carrierOnTimeToPickup, "'::boolean",
-                "'", carrierOnTimeToDelivery, "'::boolean",
-                "'", carrierOnTimeOverall, "'::boolean",
-                "'", pickupAppointmentTime, "'::timestamtz",
-                "'", deliveryAppointmentTime, "'::timestamtz",
-                "'", hasMobileAppTracking, "'::boolean",
-                "'", hasMacropointTracking, "'::boolean",
-                "'", hasEdiTracking, "'::boolean",
-                "'", contractedLoad, "'::boolean",
-                "'", loadBookedAutonomously, "'::boolean",
-                "'", loadSourcedAutonomously, "'::boolean",
-                "'", loadWasCancelled, "'::boolean",
+                'INSERT INTO public.carrier (source_id,equipment_id,carrier_rating,sourcing_channel_id,vip_carrier,carrier_dropped_us_count) VALUES (',
+                "", sourceId, "", ",",
+                "'", equipmentId, "'", ",",
+                "", carrierRating, "", ",",
+                "", channelId, "", ",",
+                "'", vipCarrier, "'::boolean", ",",
+                "", carrierDroppedUsCount, "",
                 ');'])
 
             sqls = np.append(sqls, [sql])
