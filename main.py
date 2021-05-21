@@ -7,4 +7,4 @@ from create_sourcing_channel import createSourcingChannel
 
 # createShipper()
 # createEquipment()
-createSourcingChannel()
+# createSourcingChannel()
